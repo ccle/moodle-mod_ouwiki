@@ -180,7 +180,8 @@ function ouwiki_delete_instance($id) {
 function ouwiki_get_extra_capabilities() {
     // Note: I made this list by searching for moodle/ within the module
     return array('moodle/site:accessallgroups', 'moodle/site:viewfullnames',
-            'moodle/course:manageactivities');
+            'moodle/course:manageactivities', 'report/restrictuser:view',
+            'report/restrictuser:restrict', 'report/restrictuser:removerestrict');
 }
 
 /**
@@ -716,7 +717,7 @@ function ouwiki_grade_item_delete($ouwiki) {
 function ouwiki_cm_info_dynamic(cm_info $cm) {
     if (!has_capability('mod/ouwiki:view',
             context_module::instance($cm->id))) {
-        $cm->uservisible = false;
+        $cm->set_user_visible(false);
         $cm->set_available(false);
     }
 }
