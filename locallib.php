@@ -521,6 +521,8 @@ function ouwiki_display_wiki_parameters($page, $subwiki, $cm, $type = OUWIKI_PAR
     } else {
         $output = ouwiki_get_parameter('id', $cm->id, $type);
     }
+    // START UCLA MOD: SSC-2777 - Include user parameter in OU wiki links
+    // Check if subwiki does not have a group ID (implies individual mode) and adds user parameter if so
     if (!$subwiki->defaultwiki) {
         if ($subwiki->groupid) {
             if ($type == OUWIKI_PARAMS_ARRAY) {
@@ -536,7 +538,16 @@ function ouwiki_display_wiki_parameters($page, $subwiki, $cm, $type = OUWIKI_PAR
         } else {
             $output .= ouwiki_get_parameter('user', $subwiki->userid, $type);
         }
+    } else if (!$subwiki->groupid){
+        if ($subwiki->userid) {
+            if ($type == OUWIKI_PARAMS_ARRAY) {
+                $output['user'] = $subwiki->userid;
+            } else {
+                $output .= ouwiki_get_parameter('user', $subwiki->userid, $type);
+            }
+        }
     }
+    // END UCLA MOD: SSC-2777
     if ($page !== '') {
         if ($type == OUWIKI_PARAMS_ARRAY) {
             $output['page'] = $page;
